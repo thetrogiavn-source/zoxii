@@ -160,19 +160,29 @@ export default function WithdrawPage() {
   useEffect(() => { loadData() }, [loadData])
 
   /* ── Actions ── */
+  const [verifyFailed, setVerifyFailed] = useState(false)
+
   async function verifyBankAccount() {
     if (!bankName || !bankAccountNumber) return
     setVerifying(true)
     setBankAccountName('')
-    const res = await fetch('/api/hpay/verify-bank', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ bankName, bankAccountNumber }),
-    })
-    const json = await res.json()
+    setVerifyFailed(false)
+    try {
+      const res = await fetch('/api/hpay/verify-bank', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bankName, bankAccountNumber }),
+      })
+      const json = await res.json()
+      if (json.data?.bankAccountName) {
+        setBankAccountName(json.data.bankAccountName)
+      } else {
+        setVerifyFailed(true)
+      }
+    } catch {
+      setVerifyFailed(true)
+    }
     setVerifying(false)
-    if (json.data?.bankAccountName) setBankAccountName(json.data.bankAccountName)
-    else setError(t('cannot_verify_bank'))
   }
 
   function handleProceed() {
@@ -223,6 +233,7 @@ export default function WithdrawPage() {
     setBankName('')
     setBankAccountNumber('')
     setBankAccountName('')
+    setVerifyFailed(false)
   }
 
   function closeSlideover() {
@@ -445,10 +456,27 @@ export default function WithdrawPage() {
                               </Button>
                             </div>
                           </div>
-                          {bankAccountName && (
+                          {bankAccountName && !verifyFailed && (
                             <div className="flex items-center gap-2 p-2.5 bg-green-50 rounded-lg">
                               <Check className="size-4 text-green-600" />
                               <span className="text-sm font-medium text-green-700">{bankAccountName}</span>
+                            </div>
+                          )}
+                          {verifyFailed && (
+                            <div className="space-y-1.5">
+                              <div className="flex items-center gap-2 p-2.5 bg-amber-50 rounded-lg">
+                                <AlertTriangle className="size-4 text-amber-600" />
+                                <span className="text-xs text-amber-700">{t('verify_failed_manual')}</span>
+                              </div>
+                              <div className="space-y-1">
+                                <Label className="text-xs">{t('account_owner')}</Label>
+                                <Input
+                                  value={bankAccountName}
+                                  onChange={(e) => setBankAccountName(e.target.value.toUpperCase())}
+                                  placeholder={t('enter_account_name')}
+                                  className="h-9 text-sm"
+                                />
+                              </div>
                             </div>
                           )}
                         </div>
