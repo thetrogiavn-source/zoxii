@@ -365,7 +365,7 @@ export default function GeneralSettingsPage() {
                 </div>
               ))}
             </div>
-            <p className="text-xs text-gray-400 mt-2">{t('tier_upgrade_note')}</p>
+            <p className="text-xs text-gray-400 mt-2">{t('tier_manage_note')}</p>
           </div>
         </CardContent>
       </Card>

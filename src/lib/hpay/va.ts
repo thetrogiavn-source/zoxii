@@ -19,15 +19,12 @@ export async function createVA(vaName: string): Promise<HpayVaCreateResponse> {
 
   const requestId = generateRequestId('VA')
 
-  const notifyUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://zoxii.vercel.app'}/va/callback`
-
   const payload: HpayVaCreateRequest = {
     requestId,
     merchantId: MID,
     vaType: '2',
     vaName,
     vaCondition: '2',
-    notifyUrl,
   }
 
   return hpayRequest<Record<string, unknown>, HpayVaCreateResponse>(
