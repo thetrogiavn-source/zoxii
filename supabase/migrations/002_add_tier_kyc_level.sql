@@ -1,0 +1,3 @@
+-- Add tier and kyc_level to profiles
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS tier TEXT NOT NULL DEFAULT 'STANDARD' CHECK (tier IN ('STANDARD', 'SILVER', 'GOLD', 'DIAMOND'));
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS kyc_level INTEGER NOT NULL DEFAULT 0;
