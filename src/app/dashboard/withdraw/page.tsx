@@ -438,47 +438,22 @@ export default function WithdrawPage() {
                           </div>
                           <div className="space-y-1">
                             <Label className="text-xs">{t('account_number')}</Label>
-                            <div className="flex gap-2">
-                              <Input
-                                value={bankAccountNumber}
-                                onChange={(e) => { setBankAccountNumber(e.target.value); setBankAccountName('') }}
-                                placeholder={t('enter_account_number')}
-                                className="h-9 text-sm"
-                              />
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={verifyBankAccount}
-                                disabled={verifying || !bankName || !bankAccountNumber}
-                                className="shrink-0 h-9"
-                              >
-                                {verifying ? t('verifying') : t('verify')}
-                              </Button>
-                            </div>
+                            <Input
+                              value={bankAccountNumber}
+                              onChange={(e) => setBankAccountNumber(e.target.value)}
+                              placeholder={t('enter_account_number')}
+                              className="h-9 text-sm"
+                            />
                           </div>
-                          {bankAccountName && !verifyFailed && (
-                            <div className="flex items-center gap-2 p-2.5 bg-green-50 rounded-lg">
-                              <Check className="size-4 text-green-600" />
-                              <span className="text-sm font-medium text-green-700">{bankAccountName}</span>
-                            </div>
-                          )}
-                          {verifyFailed && (
-                            <div className="space-y-1.5">
-                              <div className="flex items-center gap-2 p-2.5 bg-amber-50 rounded-lg">
-                                <AlertTriangle className="size-4 text-amber-600" />
-                                <span className="text-xs text-amber-700">{t('verify_failed_manual')}</span>
-                              </div>
-                              <div className="space-y-1">
-                                <Label className="text-xs">{t('account_owner')}</Label>
-                                <Input
-                                  value={bankAccountName}
-                                  onChange={(e) => setBankAccountName(e.target.value.toUpperCase())}
-                                  placeholder={t('enter_account_name')}
-                                  className="h-9 text-sm"
-                                />
-                              </div>
-                            </div>
-                          )}
+                          <div className="space-y-1">
+                            <Label className="text-xs">{t('account_owner')}</Label>
+                            <Input
+                              value={bankAccountName}
+                              onChange={(e) => setBankAccountName(e.target.value.toUpperCase())}
+                              placeholder={t('enter_account_name')}
+                              className="h-9 text-sm"
+                            />
+                          </div>
                         </div>
                       )}
                     </CardContent>
