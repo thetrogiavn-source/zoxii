@@ -25,6 +25,7 @@ export interface HpayVaCreateRequest {
   vaAmount?: string
   remark?: string
   vaExpirationTime?: number
+  notifyUrl?: string
 }
 
 export interface HpayVaCreateResponse {
