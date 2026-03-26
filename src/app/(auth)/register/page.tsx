@@ -204,7 +204,7 @@ export default function RegisterPage() {
                 />
               </div>
               <p className="text-xs text-gray-400">
-                Vui lòng nhập số điện thoại thật để ZOXI có thể hỗ trợ bạn.
+                {lang === 'en' ? 'Please enter a valid phone number for ZOXI support.' : 'Vui lòng nhập số điện thoại thật để ZOXI có thể hỗ trợ bạn.'}
               </p>
             </div>
 
@@ -233,7 +233,7 @@ export default function RegisterPage() {
             {/* Referral source */}
             <div className="space-y-2">
               <Label className="text-sm font-medium">
-                Bạn biết đến ZOXI qua đâu? <span className="text-red-500">*</span>
+                {lang === 'en' ? 'How did you hear about ZOXI?' : 'Bạn biết đến ZOXI qua đâu?'} <span className="text-red-500">*</span>
               </Label>
               <select
                 value={referralSource}
@@ -241,7 +241,7 @@ export default function RegisterPage() {
                 className="w-full h-12 rounded-lg border border-gray-200 bg-white px-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#FF5942]/20 focus:border-[#FF5942]"
                 required
               >
-                <option value="">Chọn nguồn</option>
+                <option value="">{lang === 'en' ? 'Select source' : 'Chọn nguồn'}</option>
                 {REFERRAL_SOURCES.map((s) => (
                   <option key={s.id} value={s.id}>{s.label}</option>
                 ))}
@@ -251,7 +251,7 @@ export default function RegisterPage() {
             {/* Password */}
             <div className="space-y-2">
               <Label className="text-sm font-medium">
-                Mật khẩu <span className="text-red-500">*</span>
+                {lang === 'en' ? 'Password' : 'Mật khẩu'} <span className="text-red-500">*</span>
               </Label>
               <div className="relative">
                 <Input
@@ -260,7 +260,7 @@ export default function RegisterPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   onFocus={() => setPasswordFocused(true)}
                   onBlur={() => setPasswordFocused(false)}
-                  placeholder="Tạo mật khẩu"
+                  placeholder={lang === 'en' ? 'Create password' : 'Tạo mật khẩu'}
                   className="h-12 rounded-lg pr-12"
                   required
                 />
@@ -312,14 +312,14 @@ export default function RegisterPage() {
             {/* Confirm password */}
             <div className="space-y-2">
               <Label className="text-sm font-medium">
-                Xác nhận mật khẩu <span className="text-red-500">*</span>
+                {lang === 'en' ? 'Confirm password' : 'Xác nhận mật khẩu'} <span className="text-red-500">*</span>
               </Label>
               <div className="relative">
                 <Input
                   type={showConfirmPassword ? 'text' : 'password'}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="Nhập lại mật khẩu"
+                  placeholder={lang === 'en' ? 'Re-enter password' : 'Nhập lại mật khẩu'}
                   className="h-12 rounded-lg pr-12"
                   required
                 />
@@ -332,17 +332,17 @@ export default function RegisterPage() {
                 </button>
               </div>
               {confirmPassword && password !== confirmPassword && (
-                <p className="text-xs text-red-500">Mật khẩu không khớp</p>
+                <p className="text-xs text-red-500">{lang === 'en' ? "Passwords don't match" : 'Mật khẩu không khớp'}</p>
               )}
             </div>
 
             {/* Invite code */}
             <div className="space-y-2">
-              <Label className="text-sm font-medium">Mã giới thiệu</Label>
+              <Label className="text-sm font-medium">{lang === 'en' ? 'Referral code' : 'Mã giới thiệu'}</Label>
               <Input
                 value={inviteCode}
                 onChange={(e) => setInviteCode(e.target.value.replace(/\s/g, ''))}
-                placeholder="Nhập mã giới thiệu (nếu có)"
+                placeholder={lang === 'en' ? 'Enter referral code (optional)' : 'Nhập mã giới thiệu (nếu có)'}
                 className="h-12 rounded-lg"
               />
             </div>
@@ -356,15 +356,15 @@ export default function RegisterPage() {
                 className="mt-0.5 size-[18px] rounded-[5px] border border-gray-300 accent-[#FF5942]"
               />
               <span className="text-sm text-gray-600 leading-relaxed">
-                Tôi đã đọc và đồng ý với{' '}
+                {lang === 'en' ? 'I have read and agree to the' : 'Tôi đã đọc và đồng ý với'}{' '}
                 <Link href="/terms" className="text-[#FF5942] font-medium hover:underline">
-                  Điều khoản dịch vụ
+                  {lang === 'en' ? 'Terms of Service' : 'Điều khoản dịch vụ'}
                 </Link>{' '}
-                và{' '}
+                {lang === 'en' ? 'and' : 'và'}{' '}
                 <Link href="/privacy" className="text-[#FF5942] font-medium hover:underline">
-                  Chính sách bảo mật
+                  {lang === 'en' ? 'Privacy Policy' : 'Chính sách bảo mật'}
                 </Link>{' '}
-                của ZOXI.
+                {lang === 'en' ? 'of ZOXI.' : 'của ZOXI.'}
               </span>
             </label>
 
@@ -373,15 +373,15 @@ export default function RegisterPage() {
               disabled={loading || !acceptPolicy}
               className="w-full h-12 rounded-lg bg-[#FF5942] hover:bg-[#FF5942]/90 text-white text-base font-bold disabled:bg-[#ccc] disabled:text-gray-500 mt-6"
             >
-              {loading ? 'Đang tạo tài khoản...' : 'Đăng ký'}
+              {loading ? (lang === 'en' ? 'Creating account...' : 'Đang tạo tài khoản...') : (lang === 'en' ? 'Sign up' : 'Đăng ký')}
             </Button>
           </form>
 
           {/* Bottom link */}
           <p className="text-center mt-8 pb-8 text-sm text-gray-600">
-            Đã có tài khoản?{' '}
+            {lang === 'en' ? 'Already have an account?' : 'Đã có tài khoản?'}{' '}
             <Link href="/login" className="text-[#FF5942] font-bold hover:underline">
-              Đăng nhập
+              {lang === 'en' ? 'Sign in' : 'Đăng nhập'}
             </Link>
           </p>
           </>
@@ -396,20 +396,20 @@ export default function RegisterPage() {
             <div className="text-center p-8">
               <div className="text-6xl mb-4">🚀</div>
               <h2 className="text-2xl font-bold text-gray-800 mb-2">
-                Bắt đầu nhận thanh toán
+                {lang === 'en' ? 'Start receiving payments' : 'Bắt đầu nhận thanh toán'}
               </h2>
               <p className="text-gray-500">
-                Chỉ cần 5 phút để tạo tài khoản
+                {lang === 'en' ? 'Only 5 minutes to create an account' : 'Chỉ cần 5 phút để tạo tài khoản'}
               </p>
             </div>
           </div>
         </div>
         <div className="text-center mt-8 max-w-[582px]">
           <h2 className="text-xl font-bold text-black mb-2">
-            Tham gia cộng đồng ZOXI Sellers
+            {lang === 'en' ? 'Join the ZOXI Sellers community' : 'Tham gia cộng đồng ZOXI Sellers'}
           </h2>
           <p className="text-gray-500 font-medium">
-            Để cập nhật thông tin mới nhất và được hỗ trợ 24/7!
+            {lang === 'en' ? 'Stay updated with the latest news and get 24/7 support!' : 'Để cập nhật thông tin mới nhất và được hỗ trợ 24/7!'}
           </p>
         </div>
       </div>
