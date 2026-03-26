@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Eye, EyeOff, Check, Info } from 'lucide-react'
-import { LanguageSwitcher } from '@/components/language-switcher'
+// Language follows landing page selection (stored in localStorage)
 import { useI18n } from '@/lib/i18n'
 
 const REFERRAL_SOURCES_VI = [
@@ -120,7 +120,6 @@ export default function RegisterPage() {
             <Link href="/" className="inline-block">
               <span className="text-4xl font-bold text-[#FF5942]">ZOXI</span>
             </Link>
-            <LanguageSwitcher />
           </div>
 
           {/* Success screen after signup */}

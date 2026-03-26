@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Eye, EyeOff } from 'lucide-react'
-import { LanguageSwitcher } from '@/components/language-switcher'
+// Language follows landing page selection (stored in localStorage)
 import { useI18n } from '@/lib/i18n'
 
 export default function LoginPage() {
@@ -53,7 +53,6 @@ export default function LoginPage() {
             <Link href="/" className="inline-block">
               <span className="text-4xl font-bold text-[#FF5942]">ZOXI</span>
             </Link>
-            <LanguageSwitcher />
           </div>
 
           {/* Heading */}

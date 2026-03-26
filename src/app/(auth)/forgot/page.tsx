@@ -7,8 +7,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ArrowLeft, CheckCircle } from 'lucide-react'
+import { useI18n } from '@/lib/i18n'
 
 export default function ForgotPasswordPage() {
+  const { lang } = useI18n()
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -36,45 +38,43 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="min-h-screen flex bg-white">
-      {/* Left column - Form */}
       <div className="flex-1 flex flex-col justify-center px-6 lg:px-[5%] xl:px-[7.6%]">
         <div className="w-full max-w-[560px] mx-auto lg:mx-0">
-          {/* Logo */}
           <div className="mb-[6%]">
             <Link href="/" className="inline-block">
               <span className="text-4xl font-bold text-[#FF5942]">ZOXI</span>
             </Link>
           </div>
 
-          {/* Back button */}
           <Link
             href="/login"
             className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 mb-6"
           >
             <ArrowLeft className="size-4" />
-            Quay lại
+            {lang === 'en' ? 'Back' : 'Quay lại'}
           </Link>
 
           <h1 className="text-[24px] sm:text-[32px] lg:text-[40px] font-semibold leading-[1.2] text-black mb-2">
-            Đặt lại mật khẩu
+            {lang === 'en' ? 'Reset password' : 'Đặt lại mật khẩu'}
           </h1>
           <p className="text-gray-500 font-medium mb-8">
-            Vui lòng nhập email đã đăng ký
+            {lang === 'en' ? 'Enter your registered email' : 'Vui lòng nhập email đã đăng ký'}
           </p>
 
           {sent ? (
             <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
               <CheckCircle className="size-12 text-green-500 mx-auto mb-3" />
-              <h2 className="text-lg font-semibold text-green-800 mb-2">Email đã được gửi!</h2>
+              <h2 className="text-lg font-semibold text-green-800 mb-2">
+                {lang === 'en' ? 'Email sent!' : 'Email đã được gửi!'}
+              </h2>
               <p className="text-green-700 text-sm">
-                Kiểm tra hộp thư <strong>{email}</strong> và nhấn vào link để đặt lại mật khẩu.
+                {lang === 'en'
+                  ? <>Check your inbox <strong>{email}</strong> and click the link to reset your password.</>
+                  : <>Kiểm tra hộp thư <strong>{email}</strong> và nhấn vào link để đặt lại mật khẩu.</>}
               </p>
               <Link href="/login">
-                <Button
-                  variant="outline"
-                  className="mt-6 h-12"
-                >
-                  Quay lại đăng nhập
+                <Button variant="outline" className="mt-6 h-12">
+                  {lang === 'en' ? 'Back to login' : 'Quay lại đăng nhập'}
                 </Button>
               </Link>
             </div>
@@ -108,24 +108,25 @@ export default function ForgotPasswordPage() {
                 disabled={loading}
                 className="w-full h-12 rounded-lg bg-[#FF5942] hover:bg-[#FF5942]/90 text-white text-base font-bold disabled:bg-[#ccc] disabled:text-gray-500"
               >
-                {loading ? 'Đang gửi...' : 'Tiếp tục'}
+                {loading
+                  ? (lang === 'en' ? 'Sending...' : 'Đang gửi...')
+                  : (lang === 'en' ? 'Continue' : 'Tiếp tục')}
               </Button>
             </form>
           )}
         </div>
       </div>
 
-      {/* Right column - Visual */}
       <div className="hidden lg:flex flex-1 rounded-[10px] bg-[#f8f8f8] m-4 flex-col items-center justify-center p-[6%]">
         <div className="w-full max-w-[600px]">
           <div className="aspect-[1838/1334] bg-gradient-to-br from-[#FF5942]/10 to-[#FF5942]/5 rounded-2xl flex items-center justify-center">
             <div className="text-center p-8">
               <div className="text-6xl mb-4">🔐</div>
               <h2 className="text-2xl font-bold text-gray-800 mb-2">
-                Bảo mật tài khoản
+                {lang === 'en' ? 'Account security' : 'Bảo mật tài khoản'}
               </h2>
               <p className="text-gray-500">
-                Đặt lại mật khẩu nhanh chóng và an toàn
+                {lang === 'en' ? 'Reset your password quickly and securely' : 'Đặt lại mật khẩu nhanh chóng và an toàn'}
               </p>
             </div>
           </div>
