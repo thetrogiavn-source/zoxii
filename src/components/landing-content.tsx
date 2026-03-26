@@ -180,25 +180,6 @@ export function LandingContent() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-20 bg-gradient-to-br from-[#FF5942] to-[#e64d38]">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            {lang === 'en' ? 'Start receiving payments today' : 'Bắt đầu nhận thanh toán ngay hôm nay'}
-          </h2>
-          <p className="text-white/90 text-lg mb-8 max-w-xl mx-auto">
-            {lang === 'en'
-              ? 'Create a free account in minutes. No credit card required.'
-              : 'Tạo tài khoản miễn phí trong vài phút. Không cần thẻ tín dụng.'}
-          </p>
-          <Link href="/register">
-            <Button size="lg" className="text-lg px-8 py-6 bg-white text-[#FF5942] hover:bg-gray-100">
-              {lang === 'en' ? 'Create free account' : 'Tạo tài khoản miễn phí'}
-            </Button>
-          </Link>
-        </div>
-      </section>
-
       {/* Footer */}
       <footer className="py-8 border-t">
         <div className="container mx-auto px-4 text-center text-gray-500">
