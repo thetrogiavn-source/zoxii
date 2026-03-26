@@ -8,8 +8,9 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Eye, EyeOff, Check, Info } from 'lucide-react'
 import { LanguageSwitcher } from '@/components/language-switcher'
+import { useI18n } from '@/lib/i18n'
 
-const REFERRAL_SOURCES = [
+const REFERRAL_SOURCES_VI = [
   { id: 'SOCIAL_MEDIA', label: 'Mạng xã hội (group, Facebook, quảng cáo...)' },
   { id: 'GOOGLE', label: 'Google' },
   { id: 'WEBSITE', label: 'Website' },
@@ -18,7 +19,16 @@ const REFERRAL_SOURCES = [
   { id: 'OTHERS', label: 'Khác' },
 ]
 
-const PASSWORD_RULES = [
+const REFERRAL_SOURCES_EN = [
+  { id: 'SOCIAL_MEDIA', label: 'Social media (groups, Facebook, ads...)' },
+  { id: 'GOOGLE', label: 'Google' },
+  { id: 'WEBSITE', label: 'Website' },
+  { id: 'REFERRED', label: 'Friends / partner referral' },
+  { id: 'SALE', label: 'Sales consultant' },
+  { id: 'OTHERS', label: 'Other' },
+]
+
+const PASSWORD_RULES_VI = [
   { label: 'Ít nhất 8 ký tự', test: (p: string) => p.length >= 8 },
   { label: 'Có chữ hoa', test: (p: string) => /[A-Z]/.test(p) },
   { label: 'Có chữ thường', test: (p: string) => /[a-z]/.test(p) },
@@ -26,7 +36,18 @@ const PASSWORD_RULES = [
   { label: 'Có ký tự đặc biệt', test: (p: string) => /[^A-Za-z0-9]/.test(p) },
 ]
 
+const PASSWORD_RULES_EN = [
+  { label: 'At least 8 characters', test: (p: string) => p.length >= 8 },
+  { label: 'Has uppercase', test: (p: string) => /[A-Z]/.test(p) },
+  { label: 'Has lowercase', test: (p: string) => /[a-z]/.test(p) },
+  { label: 'Has number', test: (p: string) => /[0-9]/.test(p) },
+  { label: 'Has special character', test: (p: string) => /[^A-Za-z0-9]/.test(p) },
+]
+
 export default function RegisterPage() {
+  const { lang } = useI18n()
+  const REFERRAL_SOURCES = lang === 'en' ? REFERRAL_SOURCES_EN : REFERRAL_SOURCES_VI
+  const PASSWORD_RULES = lang === 'en' ? PASSWORD_RULES_EN : PASSWORD_RULES_VI
   const [fullName, setFullName] = useState('')
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
@@ -49,17 +70,17 @@ export default function RegisterPage() {
     setError('')
 
     if (password !== confirmPassword) {
-      setError('Mật khẩu không khớp')
+      setError(lang === 'en' ? "Passwords don't match" : 'Mật khẩu không khớp')
       return
     }
 
     if (passwordStrength < 3) {
-      setError('Mật khẩu chưa đủ mạnh')
+      setError(lang === 'en' ? 'Password is not strong enough' : 'Mật khẩu chưa đủ mạnh')
       return
     }
 
     if (!acceptPolicy) {
-      setError('Vui lòng đồng ý với điều khoản sử dụng')
+      setError(lang === 'en' ? 'Please agree to the terms of service' : 'Vui lòng đồng ý với điều khoản sử dụng')
       return
     }
 
@@ -106,16 +127,16 @@ export default function RegisterPage() {
           {signupSuccess ? (
             <div className="py-12 text-center">
               <div className="text-6xl mb-6">📧</div>
-              <h2 className="text-2xl font-bold mb-3">Kiểm tra email của bạn</h2>
+              <h2 className="text-2xl font-bold mb-3">{lang === 'en' ? 'Check your email' : 'Kiểm tra email của bạn'}</h2>
               <p className="text-gray-600 mb-2">
-                Chúng tôi đã gửi email xác nhận đến <span className="font-semibold text-gray-900">{email}</span>
+                {lang === 'en' ? 'We have sent a verification email to' : 'Chúng tôi đã gửi email xác nhận đến'} <span className="font-semibold text-gray-900">{email}</span>
               </p>
               <p className="text-gray-500 text-sm mb-8">
-                Vui lòng click vào link trong email để kích hoạt tài khoản ZOXI.
+                {lang === 'en' ? 'Please click the link in the email to activate your ZOXI account.' : 'Vui lòng click vào link trong email để kích hoạt tài khoản ZOXI.'}
               </p>
               <Link href="/login">
                 <Button className="bg-[#FF5942] hover:bg-[#e64d38] px-8">
-                  Về trang đăng nhập
+                  {lang === 'en' ? 'Go to login' : 'Về trang đăng nhập'}
                 </Button>
               </Link>
             </div>
@@ -124,7 +145,7 @@ export default function RegisterPage() {
           {/* Heading */}
           <h1 className="mb-8">
             <span className="block text-[24px] sm:text-[32px] lg:text-[48px] font-semibold leading-[1.2] text-black">
-              Bắt đầu nào!
+              {lang === 'en' ? "Let's get started!" : 'Bắt đầu nào!'}
             </span>
           </h1>
 
@@ -144,12 +165,12 @@ export default function RegisterPage() {
             <div className="space-y-2">
               <div className="flex items-center gap-1.5">
                 <Label className="text-sm font-medium">
-                  Họ và tên <span className="text-red-500">*</span>
+                  {lang === 'en' ? 'Full name' : 'Họ và tên'} <span className="text-red-500">*</span>
                 </Label>
                 <div className="group relative">
                   <Info className="size-4 text-gray-400 cursor-help" />
                   <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded-md px-3 py-2 w-64 z-10">
-                    Vui lòng nhập đúng tên trên CCCD/CMND của bạn.
+                    {lang === 'en' ? 'Please enter the name on your ID card.' : 'Vui lòng nhập đúng tên trên CCCD/CMND của bạn.'}
                   </div>
                 </div>
               </div>
@@ -165,7 +186,7 @@ export default function RegisterPage() {
             {/* Phone */}
             <div className="space-y-2">
               <Label className="text-sm font-medium">
-                Số điện thoại <span className="text-red-500">*</span>
+                {lang === 'en' ? 'Phone number' : 'Số điện thoại'} <span className="text-red-500">*</span>
               </Label>
               <div className="relative">
                 <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 text-sm text-gray-500 pointer-events-none">

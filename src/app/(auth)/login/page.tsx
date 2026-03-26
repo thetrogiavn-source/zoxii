@@ -9,9 +9,11 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Eye, EyeOff } from 'lucide-react'
 import { LanguageSwitcher } from '@/components/language-switcher'
+import { useI18n } from '@/lib/i18n'
 
 export default function LoginPage() {
   const router = useRouter()
+  const { lang } = useI18n()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -29,9 +31,9 @@ export default function LoginPage() {
 
     if (error) {
       if (error.message?.includes('Email not confirmed')) {
-        setError('Vui lòng xác nhận email trước khi đăng nhập. Kiểm tra hộp thư của bạn.')
+        setError(lang === 'en' ? 'Please verify your email before signing in. Check your inbox.' : 'Vui lòng xác nhận email trước khi đăng nhập. Kiểm tra hộp thư của bạn.')
       } else {
-        setError('Email hoặc mật khẩu không đúng')
+        setError(lang === 'en' ? 'Invalid email or password' : 'Email hoặc mật khẩu không đúng')
       }
       setLoading(false)
       return
@@ -57,10 +59,10 @@ export default function LoginPage() {
           {/* Heading */}
           <h1 className="mb-8">
             <span className="block text-[28px] sm:text-[40px] lg:text-[60px] font-semibold leading-[1.2] text-black">
-              Xin chào!
+              {lang === 'en' ? 'Welcome!' : 'Xin chào!'}
             </span>
             <span className="block text-[22px] sm:text-[28px] lg:text-[45px] font-semibold leading-[1.3] text-black">
-              Đăng nhập vào ZOXI
+              {lang === 'en' ? 'Sign in to ZOXI' : 'Đăng nhập vào ZOXI'}
             </span>
           </h1>
 
@@ -94,7 +96,7 @@ export default function LoginPage() {
 
             <div className="space-y-2">
               <Label htmlFor="password" className="text-sm font-medium">
-                Mật khẩu <span className="text-red-500">*</span>
+                {lang === 'en' ? 'Password' : 'Mật khẩu'} <span className="text-red-500">*</span>
               </Label>
               <div className="relative">
                 <Input
@@ -126,10 +128,10 @@ export default function LoginPage() {
                   onChange={(e) => setRememberMe(e.target.checked)}
                   className="size-[18px] rounded-[5px] border border-gray-300 accent-[#FF5942]"
                 />
-                <span className="text-sm text-gray-600">Ghi nhớ đăng nhập</span>
+                <span className="text-sm text-gray-600">{lang === 'en' ? 'Remember me' : 'Ghi nhớ đăng nhập'}</span>
               </label>
               <Link href="/forgot" className="text-sm font-bold text-[#309AE7] hover:underline">
-                Quên mật khẩu?
+                {lang === 'en' ? 'Forgot password?' : 'Quên mật khẩu?'}
               </Link>
             </div>
 
@@ -138,15 +140,15 @@ export default function LoginPage() {
               disabled={loading}
               className="w-full h-12 rounded-lg bg-[#FF5942] hover:bg-[#FF5942]/90 text-white text-base font-bold disabled:bg-[#ccc] disabled:text-gray-500"
             >
-              {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
+              {loading ? (lang === 'en' ? 'Signing in...' : 'Đang đăng nhập...') : (lang === 'en' ? 'Sign in' : 'Đăng nhập')}
             </Button>
           </form>
 
           {/* Bottom link */}
           <p className="text-center mt-10 text-sm text-gray-600">
-            Chưa có tài khoản ZOXI?{' '}
+            {lang === 'en' ? "Don't have a ZOXI account?" : 'Chưa có tài khoản ZOXI?'}{' '}
             <Link href="/register" className="text-[#FF5942] font-bold hover:underline">
-              Đăng ký
+              {lang === 'en' ? 'Sign up' : 'Đăng ký'}
             </Link>
           </p>
         </div>
@@ -159,20 +161,20 @@ export default function LoginPage() {
             <div className="text-center p-8">
               <div className="text-6xl mb-4">💳</div>
               <h2 className="text-2xl font-bold text-gray-800 mb-2">
-                Nhận thanh toán xuyên biên giới
+                {lang === 'en' ? 'Receive cross-border payments' : 'Nhận thanh toán xuyên biên giới'}
               </h2>
               <p className="text-gray-500">
-                Tài khoản ảo VNĐ cho seller Việt Nam
+                {lang === 'en' ? 'VND virtual accounts for Vietnamese sellers' : 'Tài khoản ảo VNĐ cho seller Việt Nam'}
               </p>
             </div>
           </div>
         </div>
         <div className="text-center mt-8 max-w-[582px]">
           <h2 className="text-xl font-bold text-black mb-2">
-            Nhận tiền từ Etsy, nhanh chóng & hợp pháp
+            {lang === 'en' ? 'Receive money from Etsy, fast & legal' : 'Nhận tiền từ Etsy, nhanh chóng & hợp pháp'}
           </h2>
           <p className="text-gray-500 font-medium">
-            Tài khoản ảo BIDV, phí cạnh tranh, rút tiền về bank VN trong ngày.
+            {lang === 'en' ? 'BIDV virtual accounts, competitive fees, same-day withdrawal to VN banks.' : 'Tài khoản ảo BIDV, phí cạnh tranh, rút tiền về bank VN trong ngày.'}
           </p>
         </div>
       </div>
