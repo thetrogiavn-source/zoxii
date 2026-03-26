@@ -27,7 +27,11 @@ export default function LoginPage() {
     const { error } = await supabase.auth.signInWithPassword({ email, password })
 
     if (error) {
-      setError('Email hoặc mật khẩu không đúng')
+      if (error.message?.includes('Email not confirmed')) {
+        setError('Vui lòng xác nhận email trước khi đăng nhập. Kiểm tra hộp thư của bạn.')
+      } else {
+        setError('Email hoặc mật khẩu không đúng')
+      }
       setLoading(false)
       return
     }

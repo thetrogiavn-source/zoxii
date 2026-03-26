@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { rateLimit, getClientIp } from '@/lib/rate-limit'
 
 const PRO_MONTHLY_VND = 75 * 25000 // $75 * 25,000 = 1,875,000 VND
 const PRO_ANNUAL_VND = 49 * 25000 * 12 // $49 * 12 * 25,000 = 14,700,000 VND
@@ -20,6 +21,15 @@ async function logHistory(adminDb: ReturnType<typeof createAdminClient>, entry: 
 }
 
 export async function GET(request: NextRequest) {
+  const ip = getClientIp(request.headers)
+  const { success } = rateLimit(`subscription:${ip}`, 10, 60_000)
+  if (!success) {
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again later.' },
+      { status: 429, headers: { 'X-RateLimit-Remaining': '0' } }
+    )
+  }
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -44,6 +54,15 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIp(request.headers)
+  const { success } = rateLimit(`subscription:${ip}`, 10, 60_000)
+  if (!success) {
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again later.' },
+      { status: 429, headers: { 'X-RateLimit-Remaining': '0' } }
+    )
+  }
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 

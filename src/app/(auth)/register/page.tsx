@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -27,7 +26,6 @@ const PASSWORD_RULES = [
 ]
 
 export default function RegisterPage() {
-  const router = useRouter()
   const [fullName, setFullName] = useState('')
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
@@ -41,6 +39,7 @@ export default function RegisterPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [passwordFocused, setPasswordFocused] = useState(false)
+  const [signupSuccess, setSignupSuccess] = useState(false)
 
   const passwordStrength = PASSWORD_RULES.filter(r => r.test(password)).length
 
@@ -85,8 +84,8 @@ export default function RegisterPage() {
       return
     }
 
-    router.push('/dashboard')
-    router.refresh()
+    setSignupSuccess(true)
+    setLoading(false)
   }
 
   return (
@@ -101,6 +100,25 @@ export default function RegisterPage() {
             </Link>
           </div>
 
+          {/* Success screen after signup */}
+          {signupSuccess ? (
+            <div className="py-12 text-center">
+              <div className="text-6xl mb-6">📧</div>
+              <h2 className="text-2xl font-bold mb-3">Kiểm tra email của bạn</h2>
+              <p className="text-gray-600 mb-2">
+                Chúng tôi đã gửi email xác nhận đến <span className="font-semibold text-gray-900">{email}</span>
+              </p>
+              <p className="text-gray-500 text-sm mb-8">
+                Vui lòng click vào link trong email để kích hoạt tài khoản ZOXI.
+              </p>
+              <Link href="/login">
+                <Button className="bg-[#FF5942] hover:bg-[#e64d38] px-8">
+                  Về trang đăng nhập
+                </Button>
+              </Link>
+            </div>
+          ) : (
+          <>
           {/* Heading */}
           <h1 className="mb-8">
             <span className="block text-[24px] sm:text-[32px] lg:text-[48px] font-semibold leading-[1.2] text-black">
@@ -343,6 +361,8 @@ export default function RegisterPage() {
               Đăng nhập
             </Link>
           </p>
+          </>
+          )}
         </div>
       </div>
 

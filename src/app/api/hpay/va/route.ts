@@ -2,11 +2,24 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createVA } from '@/lib/hpay/va'
 import { generateRequestId } from '@/lib/hpay/client'
+import { rateLimit, getClientIp } from '@/lib/rate-limit'
+
+const RATE_LIMIT = 10
+const RATE_WINDOW_MS = 60_000 // 1 minute
 
 /**
  * GET: List seller's virtual accounts
  */
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const ip = getClientIp(request.headers)
+  const { success, remaining } = rateLimit(`va:${ip}`, RATE_LIMIT, RATE_WINDOW_MS)
+  if (!success) {
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again later.' },
+      { status: 429, headers: { 'X-RateLimit-Remaining': '0' } }
+    )
+  }
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -31,6 +44,15 @@ export async function GET() {
  * POST: Create a new virtual account
  */
 export async function POST(request: NextRequest) {
+  const ip = getClientIp(request.headers)
+  const { success, remaining } = rateLimit(`va:${ip}`, RATE_LIMIT, RATE_WINDOW_MS)
+  if (!success) {
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again later.' },
+      { status: 429, headers: { 'X-RateLimit-Remaining': '0' } }
+    )
+  }
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
