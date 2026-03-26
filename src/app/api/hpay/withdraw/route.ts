@@ -24,11 +24,38 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
+  // Per-user rate limit: 3 withdrawals per 5 minutes (prevents VPN bypass of IP-based limiting)
+  const { success: userRateOk } = rateLimit(`withdraw:user:${user.id}`, 3, 300_000)
+  if (!userRateOk) {
+    return NextResponse.json(
+      { error: 'Too many withdrawal requests. Please try again later.' },
+      { status: 429, headers: { 'X-RateLimit-Remaining': '0' } }
+    )
+  }
+
   const body = await request.json()
   const { amount, bankName, bankAccountNumber, bankAccountName, note } = body
 
   if (!amount || !bankName || !bankAccountNumber || !bankAccountName) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+  }
+
+  // Input validation
+  const numAmount = Number(amount)
+  if (!Number.isFinite(numAmount) || numAmount <= 0) {
+    return NextResponse.json({ error: 'Amount must be a positive number' }, { status: 400 })
+  }
+  if (numAmount < 10_000) {
+    return NextResponse.json({ error: 'Minimum withdrawal amount is 10,000 VND' }, { status: 400 })
+  }
+  if (numAmount > 500_000_000) {
+    return NextResponse.json({ error: 'Maximum withdrawal amount is 500,000,000 VND' }, { status: 400 })
+  }
+  if (typeof bankAccountNumber !== 'string' || !/^\d+$/.test(bankAccountNumber)) {
+    return NextResponse.json({ error: 'Bank account number must be a numeric string' }, { status: 400 })
+  }
+  if (typeof bankName !== 'string' || bankName.trim().length === 0) {
+    return NextResponse.json({ error: 'Bank name is required' }, { status: 400 })
   }
 
   const requestId = generateRequestId('WD')

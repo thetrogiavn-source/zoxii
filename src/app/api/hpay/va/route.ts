@@ -78,14 +78,31 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'vaName is required' }, { status: 400 })
   }
 
+  // Validate VA name length
+  if (vaName.length > 200) {
+    return NextResponse.json({ error: 'VA name must be 200 characters or fewer' }, { status: 400 })
+  }
+
+  // Strip any HTML tags
+  const sanitizedVaName = vaName.replace(/<[^>]*>/g, '').trim()
+
+  // Only allow alphanumeric, spaces, and basic punctuation (.,'-_)
+  if (!/^[a-zA-Z0-9\s.,'\-_]+$/.test(sanitizedVaName)) {
+    return NextResponse.json({ error: 'VA name contains invalid characters. Only letters, numbers, spaces, and basic punctuation are allowed.' }, { status: 400 })
+  }
+
+  if (sanitizedVaName.length === 0) {
+    return NextResponse.json({ error: 'vaName is required' }, { status: 400 })
+  }
+
   // Validate vaName doesn't contain prohibited keywords
-  const upper = vaName.toUpperCase()
+  const upper = sanitizedVaName.toUpperCase()
   if (upper.includes('HPAY') || upper.includes('HTP')) {
     return NextResponse.json({ error: 'VA name cannot contain HPAY or HTP' }, { status: 400 })
   }
 
   try {
-    const result = await createVA(vaName.trim())
+    const result = await createVA(sanitizedVaName)
     const requestId = generateRequestId('VA')
 
     // Save to database

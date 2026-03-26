@@ -73,7 +73,11 @@ export function verifyWebhookSecureCode(params: {
   ].join('|')
 
   const computed = crypto.createHash('md5').update(cleartext).digest('hex')
-  return computed === params.secure_code
+  try {
+    return crypto.timingSafeEqual(Buffer.from(computed), Buffer.from(params.secure_code))
+  } catch {
+    return false
+  }
 }
 
 /**

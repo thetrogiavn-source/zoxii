@@ -19,7 +19,19 @@ export async function GET(request: NextRequest) {
   }
 
   const path = request.nextUrl.searchParams.get('path')
-  if (!path) return NextResponse.json({ error: 'Missing path' }, { status: 400 })
+  if (!path || path.trim().length === 0) {
+    return NextResponse.json({ error: 'Missing path' }, { status: 400 })
+  }
+
+  // Validate path: prevent path traversal and ensure expected format
+  if (path.includes('..') || path.includes('\\')) {
+    return NextResponse.json({ error: 'Invalid path' }, { status: 400 })
+  }
+
+  // Path must match expected KYC file pattern: user_id/filename
+  if (!/^[a-zA-Z0-9_\-]+\/[a-zA-Z0-9_\-]+\.[a-zA-Z0-9]+$/.test(path)) {
+    return NextResponse.json({ error: 'Invalid path format' }, { status: 400 })
+  }
 
   // Create signed URL (valid 1 hour)
   const admin = createAdminClient()

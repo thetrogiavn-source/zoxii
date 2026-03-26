@@ -101,6 +101,15 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: '00', message: 'Success' })
   }
 
+  // Check if this transaction was already processed (idempotency for retries)
+  const { data: existingTx } = await supabase
+    .from('transactions')
+    .select('id')
+    .eq('hpay_transaction_id', transaction_id)
+    .maybeSingle()
+
+  const isRetry = !!existingTx
+
   // Get seller's profile
   const { data: sellerProfile } = await supabase
     .from('profiles')
@@ -108,9 +117,10 @@ export async function GET(request: NextRequest) {
     .eq('id', va.user_id)
     .single()
 
-  // Auto-charge after trial expires
+  // Auto-charge after trial expires — only on first processing, not retries
   const PRO_MONTHLY_AUTO_CHARGE = 75 * 25000
   if (
+    !isRetry &&
     sellerProfile?.subscription_status === 'trial' &&
     sellerProfile?.subscription_end &&
     new Date(sellerProfile.subscription_end) < new Date()
