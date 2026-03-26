@@ -44,3 +44,44 @@ export async function getChatIdByUsername(username: string): Promise<string | nu
     return null
   }
 }
+
+/**
+ * Check bot updates for a verification code sent by a specific username.
+ * Returns the chat_id if found, null otherwise.
+ */
+export async function verifyCodeFromUsername(
+  username: string,
+  code: string
+): Promise<string | null> {
+  if (!BOT_TOKEN) return null
+  try {
+    const res = await fetch(`${API}/getUpdates?limit=100`)
+    const data = await res.json()
+    if (!data.ok) return null
+
+    // Search recent messages for one matching both the username and the code
+    for (const update of (data.result || []).reverse()) {
+      const msg = update.message
+      if (!msg) continue
+      const from = msg.from
+      const text = (msg.text || '').trim()
+      if (
+        from?.username?.toLowerCase() === username.toLowerCase() &&
+        text.toUpperCase() === code.toUpperCase()
+      ) {
+        return String(from.id)
+      }
+    }
+    return null
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Generate a random verification code like "ZOXI-123456"
+ */
+export function generateVerificationCode(): string {
+  const num = Math.floor(100000 + Math.random() * 900000)
+  return `ZOXI-${num}`
+}

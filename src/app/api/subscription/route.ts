@@ -73,6 +73,23 @@ export async function POST(request: NextRequest) {
   const body = await request.json()
   const { action, billing } = body as { action: string; billing?: 'monthly' | 'annual' }
 
+  // Validate action
+  const allowedActions: string[] = ['start_trial', 'upgrade_pro', 'downgrade_free']
+  if (!action || !allowedActions.includes(action)) {
+    return NextResponse.json(
+      { error: `Invalid action. Must be one of: ${allowedActions.join(', ')}` },
+      { status: 400 }
+    )
+  }
+
+  // Validate billing if provided
+  if (billing !== undefined && billing !== 'monthly' && billing !== 'annual') {
+    return NextResponse.json(
+      { error: 'Invalid billing. Must be "monthly" or "annual".' },
+      { status: 400 }
+    )
+  }
+
   const adminDb = createAdminClient()
 
   const { data: profile, error: profileError } = await adminDb

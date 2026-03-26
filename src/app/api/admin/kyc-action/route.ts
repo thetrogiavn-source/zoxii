@@ -2,8 +2,20 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { notifyViaTelegram } from '@/lib/notify'
+import { auditLog } from '@/lib/audit'
+import { rateLimit, getClientIp } from '@/lib/rate-limit'
 
 export async function POST(request: NextRequest) {
+  // Rate limit: 20 requests per minute per IP
+  const ip = getClientIp(request.headers)
+  const { success: rateLimitOk } = rateLimit(`admin-kyc-action:${ip}`, 20, 60_000)
+  if (!rateLimitOk) {
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again later.' },
+      { status: 429, headers: { 'X-RateLimit-Remaining': '0' } }
+    )
+  }
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -47,6 +59,15 @@ export async function POST(request: NextRequest) {
     .eq('id', userId)
 
   if (profileError) return NextResponse.json({ error: profileError.message }, { status: 500 })
+
+  // Audit log
+  await auditLog({
+    admin_id: user.id,
+    action: action === 'approved' ? 'kyc_approve' : 'kyc_reject',
+    target_type: 'kyc',
+    target_id: kycId,
+    details: action === 'rejected' ? `Reason: ${rejectionReason || 'N/A'}` : undefined,
+  })
 
   // Send notification to seller
   if (action === 'approved') {

@@ -1,8 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { rateLimit, getClientIp } from '@/lib/rate-limit'
 
 export async function GET(request: NextRequest) {
+  // Rate limit: 20 requests per minute per IP
+  const ip = getClientIp(request.headers)
+  const { success: rateLimitOk } = rateLimit(`admin-kyc-image:${ip}`, 20, 60_000)
+  if (!rateLimitOk) {
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again later.' },
+      { status: 429, headers: { 'X-RateLimit-Remaining': '0' } }
+    )
+  }
+
   // Verify admin
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
