@@ -101,6 +101,35 @@ export function DashboardHeader({
       </button>
 
       <div className="flex items-center gap-2">
+      {/* Language switcher */}
+      <div className="relative" ref={langRef}>
+        <button
+          onClick={() => setLangOpen(!langOpen)}
+          className="flex items-center gap-1 h-8 px-2.5 rounded-lg text-xs font-semibold text-gray-600 hover:bg-gray-100 transition-colors border border-gray-200"
+        >
+          <span>{lang === 'VI' ? '🇻🇳' : '🇺🇸'}</span>
+          <span>{lang}</span>
+          <ChevronDown className={`size-3 text-gray-400 transition-transform duration-200 ${langOpen ? 'rotate-180' : ''}`} />
+        </button>
+
+        {langOpen && (
+          <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-hidden w-36">
+            <button
+              onClick={() => switchLang('VI')}
+              className={`w-full flex items-center gap-2.5 px-3 py-2.5 text-sm hover:bg-gray-50 transition-colors ${lang === 'VI' ? 'bg-[#FFEFED] text-[#FF5942] font-semibold' : 'text-gray-700'}`}
+            >
+              <span>🇻🇳</span> Tiếng Việt
+            </button>
+            <button
+              onClick={() => switchLang('EN')}
+              className={`w-full flex items-center gap-2.5 px-3 py-2.5 text-sm hover:bg-gray-50 transition-colors ${lang === 'EN' ? 'bg-[#FFEFED] text-[#FF5942] font-semibold' : 'text-gray-700'}`}
+            >
+              <span>🇺🇸</span> English
+            </button>
+          </div>
+        )}
+      </div>
+
       {/* Notification bell */}
       <NotificationBell />
 
