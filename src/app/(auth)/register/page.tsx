@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Eye, EyeOff, Check, Info } from 'lucide-react'
+import { LanguageSwitcher } from '@/components/language-switcher'
 
 const REFERRAL_SOURCES = [
   { id: 'SOCIAL_MEDIA', label: 'Mạng xã hội (group, Facebook, quảng cáo...)' },
@@ -94,10 +95,11 @@ export default function RegisterPage() {
       <div className="flex-1 flex flex-col py-8 px-6 lg:px-[5%] xl:px-[7.6%] overflow-y-auto">
         <div className="w-full max-w-[560px] mx-auto lg:mx-0">
           {/* Logo */}
-          <div className="mb-8">
+          <div className="mb-8 flex items-center justify-between">
             <Link href="/" className="inline-block">
               <span className="text-4xl font-bold text-[#FF5942]">ZOXI</span>
             </Link>
+            <LanguageSwitcher />
           </div>
 
           {/* Success screen after signup */}

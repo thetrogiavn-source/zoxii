@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Eye, EyeOff } from 'lucide-react'
+import { LanguageSwitcher } from '@/components/language-switcher'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -45,11 +46,12 @@ export default function LoginPage() {
       {/* Left column - Form */}
       <div className="flex-1 flex flex-col justify-center px-6 lg:px-[5%] xl:px-[7.6%]">
         <div className="w-full max-w-[560px] mx-auto lg:mx-0">
-          {/* Logo */}
-          <div className="mb-[6%]">
+          {/* Logo + Language */}
+          <div className="mb-[6%] flex items-center justify-between">
             <Link href="/" className="inline-block">
               <span className="text-4xl font-bold text-[#FF5942]">ZOXI</span>
             </Link>
+            <LanguageSwitcher />
           </div>
 
           {/* Heading */}
