@@ -1,8 +1,10 @@
 'use client'
 
 import Link from 'next/link'
+import { useI18n } from '@/lib/i18n'
 
 export default function PrivacyPage() {
+  const { lang } = useI18n()
   return (
     <div className="min-h-screen bg-white">
       <div className="max-w-3xl mx-auto px-6 py-12">
@@ -13,8 +15,8 @@ export default function PrivacyPage() {
           </Link>
         </div>
 
-        <h1 className="text-3xl font-bold text-black mb-2">Chính sách bảo mật</h1>
-        <p className="text-sm text-gray-400 mb-8">Cập nhật lần cuối: 26/03/2026</p>
+        <h1 className="text-3xl font-bold text-black mb-2">{lang === 'en' ? 'Privacy Policy' : 'Chính sách bảo mật'}</h1>
+        <p className="text-sm text-gray-400 mb-8">{lang === 'en' ? 'Last updated: March 26, 2026' : 'Cập nhật lần cuối: 26/03/2026'}</p>
 
         <div className="space-y-8 text-gray-700 leading-relaxed">
           <section>
@@ -126,7 +128,7 @@ export default function PrivacyPage() {
             href="/"
             className="text-sm font-bold text-[#FF5942] hover:underline"
           >
-            &larr; Quay lại trang chủ
+            &larr; {lang === 'en' ? 'Back to home' : 'Quay lại trang chủ'}
           </Link>
         </div>
       </div>
